@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import  ReactHtmlParser from 'react-html-parser'
 
 export async function getStaticProps() {
     const res = await fetch('http://localhost:8080/v1/api/posts');
@@ -15,6 +16,9 @@ export async function getStaticProps() {
 export default function Posts({ posts }) {
     const [title, setTitle] = useState();
     const [body, setBody] = useState();
+
+    const showdown = require('showdown')
+    const converter = new showdown.Converter()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -56,7 +60,7 @@ export default function Posts({ posts }) {
                     <div key={post.id} style={{ marginBottom: '50px' }}>
                         <h2>{post.title}</h2>
                         <p>{post.author_id === 4 ? 'Brad Preston' : 'unknown'}</p>
-                        <p>{post.md_body}</p>
+                        <p>{ReactHtmlParser(post.md_body)}</p>
                     </div>
                 )
             })}
